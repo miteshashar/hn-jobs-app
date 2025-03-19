@@ -13,5 +13,5 @@ module.exports = {
   env: {
     "jest/globals": true,
   },
-  ignorePatterns: ["/dist/*"],
+  ignorePatterns: ["/dist/*", "node_modules/*"],
 };
