@@ -5,6 +5,8 @@ import { Tabs } from "expo-router";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
+import { ActivityIndicator, Pressable } from "react-native";
+import { useHNStore } from "@/stores/hn";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -15,6 +17,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { refreshHN, loadingFromHN, loadingHNStore } = useHNStore();
 
   return (
     <Tabs
@@ -31,10 +34,38 @@ export default function TabLayout() {
           title: "Jobs",
           headerTitle: "Jobs on Hacker News",
           tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+          headerRight: () => (
+            <Pressable
+              disabled={loadingHNStore || loadingFromHN}
+              onPress={refreshHN}
+            >
+              {({ pressed }) =>
+                loadingHNStore || loadingFromHN ? (
+                  <ActivityIndicator
+                    size={25}
+                    color={Colors[colorScheme ?? "light"].text}
+                    style={{
+                      marginRight: 15,
+                      opacity: 0.4,
+                    }}
+                  />
+                ) : (
+                  <FontAwesome
+                    name="refresh"
+                    size={25}
+                    color={Colors[colorScheme ?? "light"].text}
+                    style={{
+                      marginRight: 15,
+                    }}
+                  />
+                )
+              }
+            </Pressable>
+          ),
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="filters"
         options={{
           title: "Filters",
           tabBarIcon: ({ color }) => <TabBarIcon name="filter" color={color} />,

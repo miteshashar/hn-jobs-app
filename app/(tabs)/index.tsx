@@ -1,19 +1,53 @@
 import { StyleSheet } from "react-native";
-
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 
-export default function TabOneScreen() {
+import { useHNStore } from "@/stores/hn";
+import { Suspense } from "react";
+
+export default function JobsScreen() {
+  const hnStore = useHNStore();
+  const { items, users, loadingFromHN, loadingHNStore, getJobPosts } = hnStore;
+
+  // useEffect(() => {
+  //   const { refreshHN: internalRefreshHN, loadingFromHN: loading } =
+  //     useHNStore.getState();
+  //   if (!loading) {
+  //     internalRefreshHN()
+  //       .then(() => {
+  //         console.debug("JobsScreen: refreshHN finished");
+  //       })
+  //       .catch((error) => {
+  //         console.error("JobsScreen: refreshHN error", error);
+  //       });
+  //   } else {
+  //     console.debug("JobsScreen: refreshHN already in progress");
+  //   }
+  // }, []);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <Suspense fallback={<View style={styles.container}>Loading app...</View>}>
+      {!loadingHNStore && (
+        <View style={styles.container}>
+          <Text style={{ marginTop: 10 }}>
+            HN Items: {Object.keys(items).length}
+          </Text>
+          <Text style={{ marginTop: 10 }}>
+            Relevant Job Posts: {getJobPosts().length}
+          </Text>
+          <Text style={{ marginTop: 10 }}>
+            <Text>Users: </Text>
+            {Object.keys(users).length > 0 &&
+              Object.values(users)
+                .map((user) => user.id)
+                .join(", ")}
+            {!Object.keys(users).length && "None"}
+          </Text>
+          <Text style={{ marginTop: 10 }}>
+            {loadingFromHN ? "Loading from Hacker News..." : " "}
+          </Text>
+        </View>
+      )}
+    </Suspense>
   );
 }
 
