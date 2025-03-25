@@ -1,20 +1,20 @@
 // Types for Stores
 
-import { HNItemID, HNItem, HNUser, HNUserID } from "@/types/hn";
+import { THNItemID, THNItem, THNUser, THNUserID } from "@/types/hn";
 
-export type HNStore = {
-  items: Record<HNItemID, HNItem>;
-  users: Record<HNUserID, HNUser>;
+export type THNStore = {
+  items: Record<THNItemID, THNItem>;
+  users: Record<THNUserID, THNUser>;
   loadingFromHN: boolean;
   loadingHNStore: boolean;
   setLoadingHNStore: (status: boolean) => void;
   clearHNStore: () => void;
-  getUsers: (userIds: HNUserID[]) => Record<HNUserID, HNUser>;
-  setUsers: (newUsers: HNUser[]) => void;
-  getItems: (itemIds: HNItemID[]) => Record<HNItemID, HNItem>;
-  setItems: (newItems: HNItem[]) => void;
-  getItemIdsNotInStore: (itemIds: HNItemID[]) => HNItemID[];
-  getJobPosts: () => HNItem[];
+  getUsers: (userIds: THNUserID[]) => Record<THNUserID, THNUser>;
+  setUsers: (newUsers: THNUser[]) => void;
+  getItems: (itemIds: THNItemID[]) => Record<THNItemID, THNItem>;
+  setItems: (newItems: THNItem[]) => void;
+  getItemIdsNotInStore: (itemIds: THNItemID[]) => THNItemID[];
+  getJobPosts: () => THNItem[];
   refreshHN: () => Promise<void>;
   setLoadingFromHN: (status: boolean) => Promise<void>;
 };

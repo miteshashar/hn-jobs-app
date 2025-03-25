@@ -13,5 +13,5 @@ module.exports = {
   env: {
     "jest/globals": true,
   },
-  ignorePatterns: ["/dist/*", "node_modules/*"],
+  ignorePatterns: ["/dist/*", "node_modules/*", "expo-env.d.ts"],
 };

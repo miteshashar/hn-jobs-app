@@ -1,9 +1,9 @@
 // Hacker News API Service
 
 import axios from "axios";
-import { HNItemID, HNItem, HNUserID, HNUser } from "@/types/hn";
+import { THNItemID, THNItem, THNUserID, THNUser } from "@/types/hn";
 
-const fetchItem = async (id: HNItemID): Promise<HNItem | null> => {
+const fetchItem = async (id: THNItemID): Promise<THNItem | null> => {
   const response = await axios.get(
     `${process.env.EXPO_PUBLIC_HN_API_URL}/item/${id}.json`,
     {
@@ -23,15 +23,15 @@ const fetchItem = async (id: HNItemID): Promise<HNItem | null> => {
   } else {
     response.data.fetchedAt = Date.now() / 1000;
   }
-  return response.data as HNItem | null;
+  return response.data as THNItem | null;
 };
 
-const fetchItems = async (ids: HNItemID[]): Promise<(HNItem | null)[]> => {
+const fetchItems = async (ids: THNItemID[]): Promise<(THNItem | null)[]> => {
   const promises = ids.map((id) => fetchItem(id));
   return await Promise.all(promises);
 };
 
-const fetchUser = async (id: HNUserID): Promise<HNUser | null> => {
+const fetchUser = async (id: THNUserID): Promise<THNUser | null> => {
   const response = await axios.get(
     `${process.env.EXPO_PUBLIC_HN_API_URL}/user/${id}.json`,
     {
@@ -51,7 +51,7 @@ const fetchUser = async (id: HNUserID): Promise<HNUser | null> => {
   } else {
     response.data.fetchedAt = Date.now() / 1000;
   }
-  return response.data as HNUser | null;
+  return response.data as THNUser | null;
 };
 
 export const hn = {

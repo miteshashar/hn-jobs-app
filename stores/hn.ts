@@ -6,17 +6,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { hn } from "@/services/hn";
 import {
-  HNCommentID,
-  HNItemID,
-  HNItem,
-  HNStory,
-  HNUser,
-  HNUserID,
-  HNItemTypeEnum,
-  HNStoryID,
-  HNComment,
+  THNCommentID,
+  THNItemID,
+  THNItem,
+  THNStory,
+  THNUser,
+  THNUserID,
+  EnumHNItemType,
+  THNStoryID,
+  THNComment,
 } from "@/types/hn";
-import { HNStore } from "@/types/storage";
+import { THNStore } from "@/types/storage";
 import {
   isHNItemRelevant,
   isHNWhoIsHiringJobPostStory,
@@ -27,7 +27,7 @@ import {
 
 const MONTHS_TO_FETCH = Math.ceil(process.env.EXPO_PUBLIC_JOB_CACHE_DAYS / 30);
 
-export const useHNStore = create<HNStore>()(
+export const useHNStore = create<THNStore>()(
   persist(
     (set, _, store) => ({
       items: {},
@@ -49,7 +49,7 @@ export const useHNStore = create<HNStore>()(
       setLoadingFromHN: async (status: boolean) => {
         set({ loadingFromHN: status });
       },
-      getUsers: (userIds: HNUserID[]): Record<HNUserID, HNUser> => {
+      getUsers: (userIds: THNUserID[]): Record<THNUserID, THNUser> => {
         const storeUsers = store.getState().users;
         return userIds.reduce(
           (acc, userId) => {
@@ -59,10 +59,10 @@ export const useHNStore = create<HNStore>()(
             }
             return acc;
           },
-          {} as Record<HNUserID, HNUser>,
+          {} as Record<THNUserID, THNUser>,
         );
       },
-      setUsers: (newUsers: HNUser[]) => {
+      setUsers: (newUsers: THNUser[]) => {
         set({
           users: {
             ...store.getState().users,
@@ -73,12 +73,12 @@ export const useHNStore = create<HNStore>()(
                 }
                 return acc;
               },
-              {} as Record<HNUserID, HNUser>,
+              {} as Record<THNUserID, THNUser>,
             ),
           },
         });
       },
-      getItems: (itemIds: HNItemID[]): Record<HNItemID, HNItem> => {
+      getItems: (itemIds: THNItemID[]): Record<THNItemID, THNItem> => {
         const storeItems = store.getState().items;
         return itemIds.reduce(
           (acc, itemId) => {
@@ -88,10 +88,10 @@ export const useHNStore = create<HNStore>()(
             }
             return acc;
           },
-          {} as Record<HNItemID, HNItem>,
+          {} as Record<THNItemID, THNItem>,
         );
       },
-      setItems: (newItems: HNItem[]) => {
+      setItems: (newItems: THNItem[]) => {
         set({
           items: {
             ...store.getState().items,
@@ -102,12 +102,12 @@ export const useHNStore = create<HNStore>()(
                 }
                 return acc;
               },
-              {} as Record<HNItemID, HNItem>,
+              {} as Record<THNItemID, THNItem>,
             ),
           },
         });
       },
-      getItemIdsNotInStore: (itemIds: HNItemID[]): HNItemID[] => {
+      getItemIdsNotInStore: (itemIds: THNItemID[]): THNItemID[] => {
         const storeItems = store.getState().getItems(itemIds);
         const storeItemIds = Object.keys(storeItems).map((itemId) =>
           parseInt(itemId),
@@ -121,19 +121,19 @@ export const useHNStore = create<HNStore>()(
         const storeItems = store.getState().items;
         const whoIsHiringPostIds = Object.values(storeItems)
           .filter((item) => isHNWhoIsHiringJobPostStory(item))
-          .map((item) => item.id as HNStoryID);
+          .map((item) => item.id as THNStoryID);
         const jobPosts = Object.values(storeItems).filter(
           (item) =>
-            item.type === HNItemTypeEnum.comment &&
-            whoIsHiringPostIds.includes(item.parent as HNStoryID) &&
+            item.type === EnumHNItemType.comment &&
+            whoIsHiringPostIds.includes(item.parent as THNStoryID) &&
             isHNItemRelevant(item),
-        ) as HNComment[];
+        ) as THNComment[];
         return jobPosts;
       },
       refreshHN: async () => {
         console.info("Refreshing HN store");
         set({ loadingFromHN: true });
-        let whoIsHiring: HNUser | null;
+        let whoIsHiring: THNUser | null;
         whoIsHiring = await hn.fetchUser("whoishiring");
         if (!whoIsHiring) {
           console.error("Unable to fetch whoishiring");
@@ -154,7 +154,7 @@ export const useHNStore = create<HNStore>()(
         const whoIsHiringPosts = (
           await Promise.all(
             batches.map(async (batch) => {
-              return hn.fetchItems(batch) as Promise<HNStory[]>;
+              return hn.fetchItems(batch) as Promise<THNStory[]>;
             }),
           )
         )
@@ -172,7 +172,7 @@ export const useHNStore = create<HNStore>()(
           .getItemIdsNotInStore(
             whoIsHiringPosts
               .map((post) => post.kids || [])
-              .flat() as HNCommentID[],
+              .flat() as THNCommentID[],
           );
         console.info(
           `Fetching ${jobPostCommentIdsNotInStore.length} job post comments`,
@@ -184,7 +184,7 @@ export const useHNStore = create<HNStore>()(
           process.env.EXPO_PUBLIC_HN_FETCH_BATCH_SIZE,
         );
         for (const batch of jobPostCommentBatches) {
-          const jobPostComments = (await hn.fetchItems(batch)) as HNComment[];
+          const jobPostComments = (await hn.fetchItems(batch)) as THNComment[];
           store.getState().setItems(jobPostComments);
           console.info(
             `Fetched & saved ${jobPostComments.length} job post comments`,
@@ -197,7 +197,7 @@ export const useHNStore = create<HNStore>()(
     }),
     {
       name: "hn-items",
-      storage: createJSONStorage<HNStore>(() => AsyncStorage),
+      storage: createJSONStorage<THNStore>(() => AsyncStorage),
       onRehydrateStorage: () => {
         console.info("Rehydrating HN store");
         return (state) => {

@@ -1,10 +1,10 @@
 // Utility functions for the application
 
-import { HNItem, HNItemTypeEnum, HNUser } from "@/types/hn";
+import { THNItem, EnumHNItemType, THNUser } from "@/types/hn";
 
-export function isHNWhoIsHiringJobPostStory(item: HNItem): boolean {
+export function isHNWhoIsHiringJobPostStory(item: THNItem): boolean {
   return (
-    item.type === HNItemTypeEnum.story &&
+    item.type === EnumHNItemType.story &&
     item.title.startsWith("Ask HN: Who is hiring?")
   );
 }
@@ -36,7 +36,7 @@ export function getDaysSince(since: Date | number): number {
   return getHoursSince(since) / 24;
 }
 
-export function isHNItemRelevant(item: HNItem): boolean {
+export function isHNItemRelevant(item: THNItem): boolean {
   return !(
     item.deleted ||
     item.dead ||
@@ -44,12 +44,12 @@ export function isHNItemRelevant(item: HNItem): boolean {
   );
 }
 
-export function isItemDataStale(item: HNItem): boolean {
+export function isItemDataStale(item: THNItem): boolean {
   return (
     getHoursSince(item.fetchedAt) > process.env.EXPO_PUBLIC_HN_ITEM_CACHE_HOURS
   );
 }
-export function isUserDataStale(user: HNUser): boolean {
+export function isUserDataStale(user: THNUser): boolean {
   return (
     getHoursSince(user.fetchedAt) > process.env.EXPO_PUBLIC_HN_USER_CACHE_HOURS
   );

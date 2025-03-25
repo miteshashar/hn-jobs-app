@@ -1,7 +1,7 @@
 // Types for Hacker News API
 
-type HNItemBase = {
-  id: HNItemID;
+type THNItemBase = {
+  id: THNItemID;
   deleted?: boolean;
   dead?: boolean;
   by: string;
@@ -9,14 +9,14 @@ type HNItemBase = {
   fetchedAt: Date;
 };
 
-type HNTextAndOrUrl = HNItemBase &
+type THNTextAndOrUrl = THNItemBase &
   (
     | {
-        text: HNItemHTMLText;
+        text: THNItemHTMLText;
         url: string;
       }
     | {
-        text: HNItemHTMLText;
+        text: THNItemHTMLText;
         url?: never;
       }
     | {
@@ -25,42 +25,42 @@ type HNTextAndOrUrl = HNItemBase &
       }
   );
 
-export type HNItemHTMLText = string;
+export type THNItemHTMLText = string;
 
-export enum HNItemTypeEnum {
+export enum EnumHNItemType {
   job = "job",
   story = "story",
   comment = "comment",
 }
 
-export type HNItemID = number;
-export type HNStoryID = number;
-export type HNCommentID = number;
-export type HNJobID = number;
-export type HNUserID = string;
+export type THNItemID = number;
+export type THNStoryID = number;
+export type THNCommentID = number;
+export type THNJobID = number;
+export type THNUserID = string;
 
-export type HNStory = HNItemBase &
-  HNTextAndOrUrl & {
-    type: HNItemTypeEnum.story;
+export type THNStory = THNItemBase &
+  THNTextAndOrUrl & {
+    type: EnumHNItemType.story;
     title: string;
     score: number;
     descendants: number;
-    kids?: HNCommentID[];
+    kids?: THNCommentID[];
   };
-export type HNComment = HNItemBase &
-  HNTextAndOrUrl & {
-    type: HNItemTypeEnum.comment;
-    parent: HNStoryID | HNCommentID;
-    text: HNItemHTMLText;
-    kids?: HNCommentID[];
+export type THNComment = THNItemBase &
+  THNTextAndOrUrl & {
+    type: EnumHNItemType.comment;
+    parent: THNStoryID | THNCommentID;
+    text: THNItemHTMLText;
+    kids?: THNCommentID[];
   };
-export type HNJob = HNItemBase & {
-  type: HNItemTypeEnum.job;
+export type THNJob = THNItemBase & {
+  type: EnumHNItemType.job;
   title: string;
-} & HNTextAndOrUrl;
+} & THNTextAndOrUrl;
 
-export type HNUser = {
-  id: HNUserID;
+export type THNUser = {
+  id: THNUserID;
   created: number;
   karma: number;
   about: string;
@@ -68,4 +68,4 @@ export type HNUser = {
   fetchedAt: Date;
 };
 
-export type HNItem = HNStory | HNComment | HNJob;
+export type THNItem = THNStory | THNComment | THNJob;
