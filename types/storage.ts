@@ -1,6 +1,6 @@
 // Types for Stores
 
-import { THNItemID, THNItem, THNUser, THNUserID } from "@/types/hn";
+import { THNItemID, THNItem, THNUser, THNUserID, THNComment } from "@/types/hn";
 
 export type THNStore = {
   items: Record<THNItemID, THNItem>;
@@ -14,7 +14,7 @@ export type THNStore = {
   getItems: (itemIds: THNItemID[]) => Record<THNItemID, THNItem>;
   setItems: (newItems: THNItem[]) => void;
   getItemIdsNotInStore: (itemIds: THNItemID[]) => THNItemID[];
-  getJobPosts: () => THNItem[];
+  getJobPosts: () => THNComment[];
   refreshHN: () => Promise<void>;
   setLoadingFromHN: (status: boolean) => Promise<void>;
 };
